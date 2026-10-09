@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentTube — AI Agents That Run YouTube Channels</title>
+<meta name="description" content="AgentTube is an AI agent workforce that runs YouTube channels on autopilot: topic research, scripting, voiceover, video generation, thumbnails and publishing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#05080A; color:#D7E3DC; font-family:Inter,system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  .scan { position:fixed; inset:0; z-index:50; pointer-events:none; background:repeating-linear-gradient(0deg, transparent 0 3px, rgba(0,0,0,.12) 3px 4px); opacity:.5; }
+  .wrap { max-width:1240px; margin:0 auto; padding:0 32px; }
+  header { padding:20px 0; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(45,212,191,.12); }
+  .logo { font-family:"JetBrains Mono",monospace; font-size:18px; font-weight:600; color:#fff; text-decoration:none; letter-spacing:1px; }
+  .logo b { color:#2DD4BF; }
+  .sys { font-family:"JetBrains Mono",monospace; font-size:11.5px; color:#5B6B66; display:flex; gap:18px; align-items:center; }
+  .sys .on { color:#2DD4BF; }
+  .btn { display:inline-block; background:#2DD4BF; color:#03211C; padding:13px 30px; border-radius:8px; text-decoration:none; font-weight:700; font-size:14px; transition:box-shadow .2s, transform .2s; }
+  .btn:hover { box-shadow:0 0 30px rgba(45,212,191,.45); transform:translateY(-2px); }
+  .hero { padding:90px 0 60px; text-align:center; }
+  .hero .kicker { font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:3px; color:#2DD4BF; margin-bottom:24px; }
+  .hero h1 { font-family:"Playfair Display",serif; font-size:clamp(46px,7vw,88px); font-weight:700; line-height:1.04; letter-spacing:-1px; color:#fff; }
+  .hero h1 em { font-style:italic; color:#2DD4BF; text-shadow:0 0 50px rgba(45,212,191,.35); }
+  .hero p { color:#8A9B94; font-size:18px; font-weight:300; max-width:640px; margin:26px auto 40px; line-height:1.75; }
+  .deck { background:#080D0F; border:1px solid rgba(45,212,191,.15); border-radius:16px; margin:10px 0 90px; overflow:hidden; box-shadow:0 40px 100px rgba(0,0,0,.5); }
+  .deck-bar { display:flex; justify-content:space-between; align-items:center; padding:14px 22px; border-bottom:1px solid rgba(45,212,191,.12); font-family:"JetBrains Mono",monospace; font-size:12px; color:#5B6B66; }
+  .deck-bar .live { color:#2DD4BF; }
+  .deck-grid { display:grid; grid-template-columns:1.2fr .8fr; }
+  .agents { padding:24px; display:grid; grid-template-columns:1fr 1fr; gap:12px; border-right:1px solid rgba(45,212,191,.1); }
+  .agent { background:#0A1114; border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:16px; cursor:pointer; transition:border-color .2s; }
+  .agent:hover, .agent.sel { border-color:rgba(45,212,191,.5); }
+  .agent .nm { font-family:"JetBrains Mono",monospace; font-size:13px; color:#fff; display:flex; justify-content:space-between; margin-bottom:10px; }
+  .agent .nm .st { font-size:10px; padding:2px 8px; border-radius:4px; }
+  .st.work { background:rgba(45,212,191,.15); color:#2DD4BF; }
+  .st.idle { background:rgba(255,255,255,.06); color:#5B6B66; }
+  .bar { height:6px; background:rgba(255,255,255,.06); border-radius:3px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:linear-gradient(90deg,#2DD4BF,#4ADE80); border-radius:3px; transition:width .5s; }
+  .agent .task { font-size:11.5px; color:#5B6B66; margin-top:8px; font-family:"JetBrains Mono",monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .feed { padding:24px; font-family:"JetBrains Mono",monospace; font-size:12px; line-height:2; }
+  .feed h4 { font-size:11px; letter-spacing:2px; color:#5B6B66; margin-bottom:12px; }
+  #log div { animation:fadein .4s; }
+  @keyframes fadein { from{opacity:0; transform:translateX(-6px);} to{opacity:1;} }
+  #log .t { color:#3E4F4A; margin-right:8px; }
+  #log .a { color:#2DD4BF; }
+  .manifesto { display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:start; padding:20px 0 90px; }
+  .manifesto h2 { font-family:"Playfair Display",serif; font-size:clamp(30px,4vw,46px); line-height:1.15; font-weight:600; color:#fff; }
+  .manifesto h2 em { color:#2DD4BF; font-style:italic; }
+  .manifesto .body p { color:#8A9B94; font-weight:300; font-size:16px; line-height:1.8; margin-bottom:20px; }
+  .process { padding:0 0 30px; }
+  .process h2 { font-family:"Playfair Display",serif; font-size:clamp(30px,4vw,44px); text-align:center; margin-bottom:12px; color:#fff; }
+  .process > p { text-align:center; color:#8A9B94; font-weight:300; margin-bottom:56px; font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:2px; }
+  .steps { display:flex; flex-direction:column; max-width:900px; margin:0 auto; }
+  .step { display:grid; grid-template-columns:80px 1fr 1fr; gap:30px; padding:32px 0; border-top:1px solid rgba(45,212,191,.1); align-items:center; opacity:.35; transition:opacity .5s; }
+  .step:last-child { border-bottom:1px solid rgba(45,212,191,.1); }
+  .step.lit { opacity:1; }
+  .step .n { font-family:"Playfair Display",serif; font-size:32px; color:#2DD4BF; }
+  .step h3 { font-size:21px; font-weight:600; color:#fff; }
+  .step h3 small { display:block; font-size:11px; font-weight:500; letter-spacing:2.5px; text-transform:uppercase; color:#2DD4BF; margin-bottom:8px; font-family:"JetBrains Mono",monospace; }
+  .step p { color:#8A9B94; font-weight:300; font-size:15px; line-height:1.7; }
+  .step p b { color:#D7E3DC; font-weight:600; }
+  .quote { text-align:center; padding:90px 0 30px; max-width:760px; margin:0 auto; }
+  .quote p { font-family:"Playfair Display",serif; font-size:clamp(24px,3.5vw,36px); font-style:italic; line-height:1.4; color:#fff; }
+  .quote cite { display:block; margin-top:20px; font-style:normal; font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:#2DD4BF; }
+  .contact { text-align:center; padding:40px 0 110px; }
+  .contact h2 { font-family:"Playfair Display",serif; font-size:clamp(36px,5vw,60px); margin-bottom:18px; color:#fff; }
+  .contact h2 em { color:#2DD4BF; }
+  .contact p { color:#8A9B94; font-weight:300; margin-bottom:36px; }
+  footer { border-top:1px solid rgba(45,212,191,.1); padding:24px 0; text-align:center; color:#3E4F4A; font-size:12px; font-family:"JetBrains Mono",monospace; }
+  footer a { color:#5B6B66; text-decoration:none; }
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease-out, transform .7s ease-out; }
+  .reveal.in { opacity:1; transform:none; }
+  @media(max-width:900px){ .deck-grid{grid-template-columns:1fr;} .agents{border-right:none; border-bottom:1px solid rgba(45,212,191,.1);} .manifesto{grid-template-columns:1fr; gap:30px;} .step{grid-template-columns:56px 1fr;} .step p{grid-column:2;} .sys{display:none;} }
+</style>
+</head>
+<body>
+<div class="scan"></div>
+<div class="wrap">
+  <header>
+    <a class="logo" href="#">AGENT<b>TUBE</b></a>
+    <div class="sys"><span class="on">● ALL SYSTEMS NOMINAL</span><span>v2.4.1</span></div>
+    <a class="btn" href="mailto:contact@agenttube.in">DEPLOY →</a>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">// AN AI STUDIO FOR YOUTUBE</div>
+    <h1>Cinema-grade videos,<br><em>directed by agents.</em></h1>
+    <p>AgentTube is a quiet workforce behind ambitious channels — researching, writing, voicing and cutting each video with obsessive craft, then placing the title and thumbnail with intent.</p>
+    <a class="btn" href="mailto:contact@agenttube.in">Begin →</a>
+  </section>
+
+  <section class="deck">
+    <div class="deck-bar"><span>AGENT FLEET — <span class="live">● LIVE</span></span><span>click an agent to inspect</span></div>
+    <div class="deck-grid">
+      <div class="agents" id="agents"></div>
+      <div class="feed"><h4>▸ ACTIVITY LOG</h4><div id="log"></div></div>
+    </div>
+  </section>
+
+  <section class="manifesto">
+    <h2 class="reveal">We believe great channels are <em>built,</em> not stumbled upon.</h2>
+    <div class="body reveal">
+      <p>Every video follows the same disciplined arc: a chosen topic, researched deeply; a script written with intent; visuals cut to the narration frame by frame.</p>
+      <p>Only when the film is finished do we craft its title and thumbnail — packaging drawn from the work itself, never decoration.</p>
+      <p>And nothing — nothing — publishes without a human's word.</p>
+    </div>
+  </section>
+
+  <section class="process">
+    <h2 class="reveal">The process</h2>
+    <p class="reveal">NINE MOVEMENTS · ONE FINISHED FILM</p>
+    <div class="steps" id="steps"></div>
+  </section>
+
+  <section class="quote reveal">
+    <p>"The agents handle the labour. I handle the taste."</p>
+    <cite>— Every creator, soon</cite>
+  </section>
+
+  <section class="contact reveal">
+    <h2>Your channel, <em>elevated.</em></h2>
+    <p>Private beta now open. Write to us — we reply personally.</p>
+    <a class="btn" href="mailto:contact@agenttube.in">contact@agenttube.in</a>
+  </section>
+
+  <footer>© 2026 AGENTTUBE · <a href="mailto:contact@agenttube.in">contact</a></footer>
+</div>
+<script>
+  const agents = [
+    { n:"SCOUT-01", task:"Deep-diving topic sources…", p:64 },
+    { n:"SCRIBE-02", task:"Drafting script section 4/5…", p:78 },
+    { n:"STAGE-03", task:"Planning scene 18/24…", p:52 },
+    { n:"RENDER-04", task:"Generating clip 12/24…", p:41 },
+    { n:"CUTTER-05", task:"Assembling timeline…", p:88 },
+    { n:"PACK-06", task:"Idle — awaiting video", p:0 },
+  ];
+  const ag = document.getElementById('agents');
+  agents.forEach((a,i)=>{
+    const d = document.createElement('div'); d.className='agent'+(i===0?' sel':'');
+    d.innerHTML = `<div class="nm">${a.n}<span class="st ${a.p===0?'idle':'work'}">${a.p===0?'IDLE':'WORKING'}</span></div><div class="bar"><i style="width:${a.p}%"></i></div><div class="task">${a.task}</div>`;
+    d.onclick = ()=>{ [...ag.children].forEach(x=>x.classList.remove('sel')); d.classList.add('sel'); push(`${a.n} selected — ${a.task}`); };
+    ag.appendChild(d);
+  });
+  const log = document.getElementById('log');
+  const msgs = [
+    ["SCOUT-01","source #14 verified — claim badged"],
+    ["SCRIBE-02","hook rewritten — pattern: bold claim"],
+    ["STAGE-03","scene 18 visual locked to narration"],
+    ["RENDER-04","clip 12 rendered — motion check passed"],
+    ["CUTTER-05","crossfade tuned — 0.35s"],
+    ["SCOUT-01","research brief complete — 12 points"],
+    ["PACK-06","standing by for assembled video"],
+  ];
+  let mi = 0;
+  function push(m){
+    const t = new Date().toTimeString().slice(0,8);
+    const d = document.createElement('div');
+    const parts = m.split(' — ');
+    d.innerHTML = `<span class="t">${t}</span><span class="a">${parts[0]}</span> — ${parts[1]||''}`;
+    log.prepend(d);
+    while (log.children.length > 9) log.lastChild.remove();
+  }
+  setInterval(()=>{ push(msgs[mi % msgs.length][0] + ' — ' + msgs[mi % msgs.length][1]); mi++; }, 2200);
+  push("SYS — fleet initialised, 6 agents online");
+
+  const steps = [
+    ["I","Topic","The choice","You choose the topic. Everything downstream serves that single decision."],
+    ["II","Research","The depth","Agents read widely on your topic and return an evidence brief — every claim badged, nothing invented."],
+    ["III","Script","The words","A full script, structured for retention, with a fact-check list beside every assertion."],
+    ["IV","Scenes","The plan","The script becomes a shot list — each scene timed to the line it illustrates."],
+    ["V","Clips","The footage","True-motion AI visuals generated per scene. No stills, no slideshows."],
+    ["VI","Assemble","The cut","Voiceover, visuals and captions cut together, paced like cinema."],
+    ["VII","Title","The promise","Written last, from the finished film — in proven hook patterns."],
+    ["VIII","Thumbnail","The invitation","Designed from the video's strongest frame. Intrigue, never clickbait."],
+    ["IX","Publish","The release","Exported, packaged, scheduled — only on your explicit word."],
+  ];
+  const box = document.getElementById('steps');
+  steps.forEach(s=>{
+    const d = document.createElement('div'); d.className='step reveal';
+    d.innerHTML = `<div class="n">${s[0]}</div><h3><small>Movement ${s[0]}</small>${s[1]}</h3><p><b>${s[2]}.</b> ${s[3]}</p>`;
+    box.appendChild(d);
+  });
+  const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  const io2 = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('lit'); }}),{threshold:.55});
+  document.querySelectorAll('.step').forEach(el=>io2.observe(el));
+</script>
+</body>
+</html>
