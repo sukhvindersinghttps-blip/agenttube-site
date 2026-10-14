@@ -1,42 +1,43 @@
-<escape>{
-"products": [
+
 {
-"id": "ai-image-prompt-pack",
-"name": "AI Image Prompt Pack",
-"badge": "BESTSELLER",
-"image": "images/ai-prompt-poster.png",
-"imageAlt": "AI Image Prompt Pack promotional poster",
-"description": "A premium PDF with 100–150 ready-to-use AI image prompts — for YouTube thumbnails, channel visuals and AI art. Copy, paste, generate.",
-"features": [
-"100–150 curated prompts",
-"Thumbnails, channel art & AI art styles",
-"Copy-paste ready (Midjourney / DALL·E / Gemini)",
-"PDF — delivered after payment"
-],
-"price": "₹749",
-"pricePaise": 74900,
-"buttonText": "Buy Now",
-"paymentLink": "https://rzp.io/rzp/lRxsaRy",
-"deliveryNote": "After payment, you'll receive the PDF via email/WhatsApp."
-},
-{
-"id": "content-pilot-ai",
-"name": "Muse AI",
-"badge": "NEW",
-"image": "images/1791998329390.png",
-"imageAlt": "Muse AI",
-"description": "Content Pilot AI is an agentic AI that runs your content work on autopilot. It researches content ideas, generates videos, automates repetitive work, builds workflows, schedules tasks, and much more — so your channel keeps publishing while you focus on growing it.",
-"features": [
-"Agentic AI — video generation & content research",
-"Automate work with workflows",
-"Schedule tasks",
-"10 billion credits included"
-],
-"price": "₹4,999",
-"pricePaise": 499900,
-"buttonText": "Buy Now",
-"paymentLink": "https://rzp.io/rzp/3BKej2B",
-"deliveryNote": "Credits delivered within 12 hours of payment. You'll receive access details via email/WhatsApp."
+  "products": [
+    {
+      "id": "ai-image-prompt-pack",
+      "name": "AI Image Prompt Pack",
+      "badge": "BESTSELLER",
+      "image": "images/ai-prompt-poster.png",
+      "imageAlt": "AI Image Prompt Pack promotional poster",
+      "description": "A premium PDF with 100–150 ready-to-use AI image prompts for YouTube thumbnails, channel visuals and AI art.",
+      "features": [
+        "100–150 curated prompts",
+        "Thumbnails, channel art and AI art styles",
+        "Copy-paste ready for Midjourney, DALL·E and Gemini",
+        "PDF delivered after payment"
+      ],
+      "price": "₹749",
+      "pricePaise": 74900,
+      "buttonText": "Buy Now",
+      "paymentLink": "https://rzp.io/rzp/lRxsaRy",
+      "deliveryNote": "After payment, you'll receive the PDF via email or WhatsApp."
+    },
+    {
+      "id": "content-pilot-ai",
+      "name": "Muse AI",
+      "badge": "NEW",
+      "image": "images/1791998329390.png",
+      "imageAlt": "Muse AI",
+      "description": "Content Pilot AI helps research content ideas, generate videos, automate repetitive work and schedule tasks.",
+      "features": [
+        "AI video generation and content research",
+        "Automate work with workflows",
+        "Schedule tasks",
+        "10 billion credits included"
+      ],
+      "price": "₹4,999",
+      "pricePaise": 499900,
+      "buttonText": "Buy Now",
+      "paymentLink": "https://rzp.io/rzp/3BKej2B",
+      "deliveryNote": "Credits delivered within 12 hours of payment. Access details arrive via email or WhatsApp."
+    }
+  ]
 }
-]
-}</escape>
