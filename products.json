@@ -1,9 +1,11 @@
 <escape>{
 "products": [
 {
+"id": "ai-image-prompt-pack",
+"name": "AI Image Prompt Pack",
 "badge": "BESTSELLER",
-"buttonText": "Buy Now",
-"deliveryNote": "After payment, you'll receive the PDF via email/WhatsApp.",
+"image": "images/ai-prompt-poster.png",
+"imageAlt": "AI Image Prompt Pack promotional poster",
 "description": "A premium PDF with 100–150 ready-to-use AI image prompts — for YouTube thumbnails, channel visuals and AI art. Copy, paste, generate.",
 "features": [
 "100–150 curated prompts",
@@ -11,18 +13,18 @@
 "Copy-paste ready (Midjourney / DALL·E / Gemini)",
 "PDF — delivered after payment"
 ],
-"id": "ai-image-prompt-pack",
-"image": "images/ai-prompt-poster.png",
-"imageAlt": "AI Image Prompt Pack cover",
-"name": "AI Image Prompt Pack",
-"paymentLink": "https://rzp.io/rzp/lRxsaRy",
 "price": "₹749",
-"pricePaise": 74900
+"pricePaise": 74900,
+"buttonText": "Buy Now",
+"paymentLink": "https://rzp.io/rzp/lRxsaRy",
+"deliveryNote": "After payment, you'll receive the PDF via email/WhatsApp."
 },
 {
+"id": "content-pilot-ai",
+"name": "Muse AI",
 "badge": "NEW",
-"buttonText": "Buy Now",
-"deliveryNote": "Credits delivered within 12 hours of payment. You'll receive access details via email/WhatsApp.",
+"image": "images/1791998329390.png",
+"imageAlt": "Muse AI",
 "description": "Content Pilot AI is an agentic AI that runs your content work on autopilot. It researches content ideas, generates videos, automates repetitive work, builds workflows, schedules tasks, and much more — so your channel keeps publishing while you focus on growing it.",
 "features": [
 "Agentic AI — video generation & content research",
@@ -30,13 +32,11 @@
 "Schedule tasks",
 "10 billion credits included"
 ],
-"id": "content-pilot-ai",
-"image": "images/1791998329390.png",
-"imageAlt": "Muse AI",
-"name": "Muse AI",
-"paymentLink": "https://rzp.io/rzp/3BKej2B",
 "price": "₹4,999",
-"pricePaise": 499900
+"pricePaise": 499900,
+"buttonText": "Buy Now",
+"paymentLink": "https://rzp.io/rzp/3BKej2B",
+"deliveryNote": "Credits delivered within 12 hours of payment. You'll receive access details via email/WhatsApp."
 }
 ]
 }</escape>
