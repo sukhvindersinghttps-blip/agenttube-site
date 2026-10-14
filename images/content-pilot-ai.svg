@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A1114"/>
+      <stop offset="1" stop-color="#123332"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <circle cx="520" cy="80" r="70" fill="#2DD4BF" opacity="0.15"/>
+  <circle cx="110" cy="330" r="60" fill="#8B5CF6" opacity="0.15"/>
+  <text x="48" y="180" font-family="Arial, sans-serif" font-size="44" font-weight="bold" fill="#ffffff">Content Pilot AI</text>
+  <text x="48" y="225" font-family="Arial, sans-serif" font-size="22" fill="#2DD4BF">Your own AI content tool</text>
+  <text x="48" y="262" font-family="Arial, sans-serif" font-size="18" fill="#8A9B94">5 billion credits • Subscription</text>
+  <rect x="48" y="295" width="220" height="8" rx="4" fill="url(#accent)"/>
+</svg>

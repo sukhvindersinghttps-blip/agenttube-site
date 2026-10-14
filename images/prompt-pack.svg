@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#05080A"/>
+      <stop offset="1" stop-color="#0B1B22"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2DD4BF"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2DD4BF" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <circle cx="650" cy="90" r="180" fill="#2DD4BF" opacity="0.12"/>
+  <circle cx="120" cy="430" r="160" fill="#8B5CF6" opacity="0.14"/>
+  <!-- floating prompt cards -->
+  <g transform="rotate(-6 200 200)">
+    <rect x="90" y="120" width="300" height="180" rx="18" fill="#0A1114" stroke="#2DD4BF" stroke-opacity="0.5"/>
+    <rect x="110" y="145" width="180" height="12" rx="6" fill="#2DD4BF" opacity="0.8"/>
+    <rect x="110" y="170" width="240" height="10" rx="5" fill="#D7E3DC" opacity="0.35"/>
+    <rect x="110" y="190" width="200" height="10" rx="5" fill="#D7E3DC" opacity="0.25"/>
+    <rect x="110" y="230" width="120" height="26" rx="13" fill="url(#card)"/>
+  </g>
+  <g transform="rotate(5 520 300)">
+    <rect x="420" y="220" width="280" height="160" rx="18" fill="#0A1114" stroke="#8B5CF6" stroke-opacity="0.5"/>
+    <circle cx="460" cy="260" r="22" fill="#8B5CF6" opacity="0.7"/>
+    <rect x="500" y="248" width="150" height="10" rx="5" fill="#D7E3DC" opacity="0.4"/>
+    <rect x="500" y="268" width="110" height="10" rx="5" fill="#D7E3DC" opacity="0.25"/>
+    <rect x="445" y="310" width="210" height="12" rx="6" fill="#2DD4BF" opacity="0.6"/>
+  </g>
+  <text x="60" y="70" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#2DD4BF" letter-spacing="3">AGENTTUBE</text>
+  <text x="60" y="420" font-family="Arial, sans-serif" font-size="52" font-weight="800" fill="#FFFFFF">AI IMAGE</text>
+  <text x="60" y="475" font-family="Arial, sans-serif" font-size="52" font-weight="800" fill="url(#glow)">PROMPT PACK</text>
+  <text x="560" y="70" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">100+ PROMPTS</text>
+</svg>
