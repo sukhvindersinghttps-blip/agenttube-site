@@ -319,9 +319,18 @@
   </div>
 </div>
 
-<!-- Thank you / failure modal -->
+<!-- Result modal (pay / success / failure) -->
 <div class="modal" id="resultModal">
   <div class="modal-card">
+    <div id="resultPay" style="display:none;">
+      <div class="thank-icon">💳</div>
+      <h3 class="center">Complete your payment</h3>
+      <p class="modal-sub center">You are about to pay on Razorpay. Your order is <b>not</b> confirmed until the payment goes through there.</p>
+      <div class="order-summary" id="paySummary"></div>
+      <a class="btn pay-btn" id="razorpayMeBtn" href="https://razorpay.me/@sukhvindersingh5057" target="_blank" rel="noopener">Pay on Razorpay →</a>
+      <p class="pay-note" id="payNote">On the Razorpay page, enter the exact amount shown above. After payment, we'll contact you on the email/mobile you entered.</p>
+      <button class="btn pay-btn btn-ghost" style="margin-top:10px;" onclick="closeResult()">Close</button>
+    </div>
     <div id="resultSuccess" style="display:none;">
       <div class="thank-icon">✅</div>
       <h3 class="center">Payment successful!</h3>
@@ -340,7 +349,6 @@
 </div>
 
 <script src="config.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
   /* ---------- Agent fleet (decorative) ---------- */
   const agents = [
@@ -501,64 +509,66 @@
     return ok ? { name, email, mobile } : null;
   }
 
-  /* ---------- Razorpay ---------- */
+  /* ---------- Razorpay Payment Links / Razorpay.me (API Keys restricted — no Checkout.js) ----------
+     Flow: form validates → pay modal shows the order summary + a button
+     to a Razorpay payment page. Payment happens OFF-SITE, so this page
+     never claims the payment is confirmed. Cart stays intact.
+     Amount auto-fill: a Razorpay Payment Link has a FIXED amount, so it
+     can auto-fill only for an exact cart match:
+       - Prompt Pack × 1 → that product's paymentLink (Rs 749)
+       - Content Pilot AI × 1 → that product's paymentLink (Rs 4,999)
+       - Prompt Pack × 1 + Content Pilot AI × 1 → BOTH_PRODUCTS_PAYMENT_LINK (Rs 5,748)
+     Every other case (placeholder link, quantity > 1, other combos) falls
+     back to the generic Razorpay.me link, where the customer enters the
+     exact amount shown. Full auto-fill for any cart total needs API
+     access (Checkout.js) once it is unrestricted. */
   function startPayment(){
     const customer = validateForm();
     if(!customer) return;
     lastCustomer = customer;
 
-    if(typeof RAZORPAY_KEY_ID === "undefined" || !RAZORPAY_KEY_ID || RAZORPAY_KEY_ID.indexOf("PASTE_YOUR") === 0){
-      const e = document.getElementById("formError");
-      e.textContent = "Checkout is not set up yet — the owner needs to paste the Razorpay Key ID into config.js (see README).";
-      e.classList.add("show");
-      return;
-    }
-    if(typeof Razorpay === "undefined"){
-      const e = document.getElementById("formError");
-      e.textContent = "Razorpay could not load (check your internet connection) — please try again.";
-      e.classList.add("show");
-      return;
-    }
+    const lines = cartItemsList();
+    const items = lines.map(({product:p, qty}) => `<div class="row"><span>${esc(p.name)} × ${qty}</span><b>${fmtINR(p.pricePaise*qty)}</b></div>`).join("");
     const total = cartTotalPaise();
-    const itemsDesc = cartItemsList().map(({product:p, qty}) => `${p.name} × ${qty}`).join(", ");
-    const options = {
-      key: RAZORPAY_KEY_ID,
-      amount: total,
-      currency: (typeof CURRENCY !== "undefined" ? CURRENCY : "INR"),
-      name: (typeof STORE_NAME !== "undefined" ? STORE_NAME : "AgentTube"),
-      description: itemsDesc,
-      prefill: { name: customer.name, email: customer.email, contact: "+91" + customer.mobile },
-      theme: { color: "#2DD4BF" },
-      handler: function(response){ onPaymentSuccess(response); },
-      modal: { ondismiss: function(){ /* user closed the window — nothing charged */ } }
-    };
-    const rzp = new Razorpay(options);
-    rzp.on("payment.failed", function(resp){ onPaymentFailed(resp); });
-    rzp.open();
-  }
-
-  function onPaymentSuccess(response){
-    closeCheckout();
-    const items = cartItemsList().map(({product:p, qty}) => `<div class="row"><span>${esc(p.name)} × ${qty}</span><b>${fmtINR(p.pricePaise*qty)}</b></div>`).join("");
-    document.getElementById("successSummary").innerHTML =
-      `<div class="row"><span>Payment ID</span><b>${esc(response.razorpay_payment_id || "—")}</b></div>
-       <div class="row"><span>Name</span><b>${esc(lastCustomer ? lastCustomer.name : "")}</b></div>
-       <div class="row"><span>Email</span><b>${esc(lastCustomer ? lastCustomer.email : "")}</b></div>
-       <div class="row"><span>Mobile</span><b>${esc(lastCustomer ? lastCustomer.mobile : "")}</b></div>
+    document.getElementById("paySummary").innerHTML =
+      `<div class="row"><span>Name</span><b>${esc(customer.name)}</b></div>
+       <div class="row"><span>Email</span><b>${esc(customer.email)}</b></div>
+       <div class="row"><span>Mobile</span><b>${esc(customer.mobile)}</b></div>
        ${items}
-       <div class="row total"><span>Amount paid</span><b>${fmtINR(cartTotalPaise())}</b></div>`;
-    document.getElementById("resultSuccess").style.display = "block";
+       <div class="row total"><span>Amount to pay</span><b>${fmtINR(total)}</b></div>`;
+    // Pick the payment destination:
+    //  - Prompt Pack × 1 → its paymentLink (Rs 749, pre-filled)
+    //  - Content Pilot AI × 1 → its paymentLink (Rs 4,999, pre-filled)
+    //  - Prompt Pack × 1 + Content Pilot AI × 1 → BOTH_PRODUCTS_PAYMENT_LINK (Rs 5,748, pre-filled)
+    //  - anything else → Razorpay.me fallback (customer enters the exact amount)
+    let payHref = (typeof RAZORPAY_ME_LINK !== "undefined" && RAZORPAY_ME_LINK) ? RAZORPAY_ME_LINK : "https://razorpay.me/@sukhvindersingh5057";
+    let payNote = "On the Razorpay page, enter the exact amount shown above. After payment, we'll contact you on the email/mobile you entered.";
+    const autoFillNote = "The amount is already filled in on the payment page — just complete your payment. After payment, we'll contact you on the email/mobile you entered.";
+    const realLink = (l) => l && l !== "PASTE_PAYMENT_LINK_HERE" && l !== "PASTE_BOTH_COMBO_LINK_HERE";
+    if(lines.length === 1 && lines[0].qty === 1){
+      const link = lines[0].product.paymentLink;
+      if(realLink(link)){
+        payHref = link;
+        payNote = autoFillNote;
+      }
+    } else if(lines.length === 2){
+      const hasPack = lines.some(l => l.product.id === "ai-image-prompt-pack" && l.qty === 1);
+      const hasPilot = lines.some(l => l.product.id === "content-pilot-ai" && l.qty === 1);
+      if(hasPack && hasPilot && typeof BOTH_PRODUCTS_PAYMENT_LINK !== "undefined" && realLink(BOTH_PRODUCTS_PAYMENT_LINK)){
+        payHref = BOTH_PRODUCTS_PAYMENT_LINK;
+        payNote = autoFillNote;
+      }
+    }
+    const payBtn = document.getElementById("razorpayMeBtn");
+    payBtn.href = payHref;
+    payBtn.textContent = `Pay ${fmtINR(total)} on Razorpay →`;
+    document.getElementById("payNote").textContent = payNote;
+    closeCheckout();
+    document.getElementById("resultPay").style.display = "block";
+    document.getElementById("resultSuccess").style.display = "none";
     document.getElementById("resultFail").style.display = "none";
     document.getElementById("resultModal").classList.add("open");
-    CART = {}; updateCartBadge(); renderCart(); // empty cart after successful order
-  }
-  function onPaymentFailed(resp){
-    closeCheckout();
-    const reason = (resp && resp.error && resp.error.description) ? resp.error.description : "The payment did not go through.";
-    document.getElementById("failMsg").textContent = reason + " Please try again.";
-    document.getElementById("resultSuccess").style.display = "none";
-    document.getElementById("resultFail").style.display = "block";
-    document.getElementById("resultModal").classList.add("open");
+    // Cart is kept intact — payment happens off-site on Razorpay.
   }
   function retryPayment(){ document.getElementById("resultModal").classList.remove("open"); openCheckout(); }
   function closeResult(){ document.getElementById("resultModal").classList.remove("open"); }
